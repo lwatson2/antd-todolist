@@ -26,7 +26,7 @@ const TodoList = () => {
     }
     itemListArray.push(newItem);
     setItemList(itemListArray);
-    setNewItem();
+    setNewItem("");
   };
   const handleDeleteItem = id => {
     let newItemList = [...itemList];
