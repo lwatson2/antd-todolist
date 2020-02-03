@@ -63,7 +63,6 @@ const TodoList = () => {
             <Input
               placeholder="Add item..."
               onChange={handleChange}
-              style={{ marginRight: 5 }}
               value={newItem}
               size="large"
             />
