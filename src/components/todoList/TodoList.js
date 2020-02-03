@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Input, Button, Card, Icon, Alert, Modal } from "antd";
+import React, { useState } from "react";
+import { Input, Button, Card, Icon, Alert, Form } from "antd";
 import "./TodoList.css";
 
 const TodoList = () => {
@@ -10,6 +10,7 @@ const TodoList = () => {
   const [updateItemId, setupdateItemId] = useState();
   const [newUpdatedItem, setNewUpdatedItem] = useState("");
   const ButtonGroup = Button.Group;
+  const FormItem = Form.Item;
 
   const handleChange = event => {
     if (error) {
@@ -32,11 +33,13 @@ const TodoList = () => {
     let newItemList = [...itemList];
     newItemList.splice(id, 1);
     setItemList(newItemList);
+    setshowEditInput(false);
   };
 
   const handleShowInput = key => {
     setupdateItemId(key);
     setshowEditInput(true);
+    setNewUpdatedItem(itemList[key]);
   };
 
   const handleUpdateChange = e => {
@@ -44,7 +47,6 @@ const TodoList = () => {
   };
   const handleSaveEdit = key => {
     let updatedItemList = [...itemList];
-    console.log(newUpdatedItem);
     if (newUpdatedItem !== "") {
       updatedItemList[key] = newUpdatedItem;
     }
@@ -55,18 +57,24 @@ const TodoList = () => {
   };
   return (
     <main className="container">
-      <div className="add-item-container">
-        <Input
-          placeholder="Add item..."
-          onChange={handleChange}
-          style={{ marginRight: 5 }}
-          value={newItem}
-          size="large"
-        />
-        <Button type="primary" onClick={handleAddItem}>
-          Add Item
-        </Button>
-      </div>
+      <Form onSubmit={handleAddItem}>
+        <div className="add-item-container">
+          <FormItem>
+            <Input
+              placeholder="Add item..."
+              onChange={handleChange}
+              style={{ marginRight: 5 }}
+              value={newItem}
+              size="large"
+            />
+          </FormItem>
+          <FormItem>
+            <Button type="primary" htmlType="submit">
+              Add Item
+            </Button>
+          </FormItem>
+        </div>
+      </Form>
       {error && (
         <Alert
           style={{ marginTop: 10 }}
@@ -77,37 +85,43 @@ const TodoList = () => {
       {itemList.map((item, key) => {
         if (showEditInput && updateItemId === key) {
           return (
-            <div className="todo-item-container" id={key}>
-              <Card size="small" id={key}>
-                <Input
-                  placeholder={itemList[key]}
-                  onChange={handleUpdateChange}
-                  style={{ marginRight: 5 }}
-                  value={newUpdatedItem}
-                  size="large"
-                />
-              </Card>
-              <ButtonGroup>
-                <Button
-                  type="primary"
-                  onClick={() => handleSaveEdit(key)}
-                  block
-                >
-                  Save
-                  <Icon type="save" />
-                </Button>
-              </ButtonGroup>
-              <ButtonGroup>
-                <Button
-                  type="danger"
-                  onClick={() => handleDeleteItem(key)}
-                  block
-                >
-                  Delete
-                  <Icon type="delete" />
-                </Button>
-              </ButtonGroup>
-            </div>
+            <Form
+              style={{ width: "100%" }}
+              onSubmit={() => handleSaveEdit(key)}
+            >
+              <div className="todo-item-container" id={key}>
+                <Card size="small" id={key}>
+                  <FormItem>
+                    <Input
+                      placeholder="Edit item..."
+                      onChange={handleUpdateChange}
+                      value={newUpdatedItem}
+                      size="large"
+                    />
+                  </FormItem>
+                </Card>
+                <ButtonGroup>
+                  <FormItem>
+                    <Button type="primary" block htmlType="submit">
+                      Save
+                      <Icon type="save" />
+                    </Button>
+                  </FormItem>
+                </ButtonGroup>
+                <ButtonGroup>
+                  <FormItem>
+                    <Button
+                      type="danger"
+                      onClick={() => handleDeleteItem(key)}
+                      block
+                    >
+                      Delete
+                      <Icon type="delete" />
+                    </Button>
+                  </FormItem>
+                </ButtonGroup>
+              </div>
+            </Form>
           );
         }
         return (
